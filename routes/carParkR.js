@@ -3,7 +3,10 @@ const Models = require('../models/index')
 const car_parksHandler = async (request, h) => {
     try {
         const car_parks = await Models.car_park.findAll({})
-        return { data: car_parks }
+        return { 
+            message: "Data car_parks berhasil diquery !",
+            data: car_parks
+        }
     } catch (error) {
         return h.response({ error: error.message }).code(400)
     }
@@ -57,6 +60,24 @@ const updatecar_parkHandler = async (request, h) => {
     }
 }
 
+const findcar_parkHandler = async (request, h) => {
+    try {
+        const car_park = await Models.car_park.findOne({ 
+            attributes: ['id', 'no_registrasi', 'arrival', 'departure', 'status', 'biaya', 'createdAt', 'updatedAt'], 
+            where: { id: request.params.id }
+        })
+        if (car_park !== null)      
+            return { 
+                message: "Data car_park berhasil diquery !",
+                data: car_park
+            }
+    }catch (error) {
+        return h.response({
+            error: error.message
+        }).code(400)
+    }
+}
+
 const deletecar_parkHandler = async (request, h) => {
     try {
         const car_park_id = request.params.id;
@@ -75,6 +96,7 @@ const deletecar_parkHandler = async (request, h) => {
 
 module.exports = [
     { method: 'GET', path: '/car_parks', handler: car_parksHandler },
+    { method: 'GET', path: '/car_park/get/{id}', handler: findcar_parkHandler},
     { method: 'POST', path: '/car_park', handler: createcar_parkHandler },
     { method: 'PUT', path: '/car_park/{id}', handler: updatecar_parkHandler },
     { method: 'DELETE', path: '/car_park/{id}', handler: deletecar_parkHandler }
