@@ -34,13 +34,16 @@ const createcar_parkHandler = async (request, h) => {
 const updatecar_parkHandler = async (request, h) => {
     try {
         const car_park_id = request.params.id;
-        const { title, description } = request.payload;
+        const departure =  JSON.stringify(new Date());
+        const { status, biaya } = request.payload;
         const car_park = await Models.car_park.update({
-            title: title,
-            description: description
+            departure:departure,
+            status: status,
+            biaya: biaya
         }, {
                 where: {
-                    id: car_park_id
+                    id: car_park_id,
+                    status:"check_in"
                 }
             })
         return {
