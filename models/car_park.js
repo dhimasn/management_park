@@ -14,10 +14,11 @@ module.exports = (sequelize, DataTypes) => {
   car_park.init({
     id: {type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true},
     no_registrasi: {type: DataTypes.STRING},
-    arrival: {type: DataTypes.STRING},
-    departure: {type: DataTypes.STRING},
+    arrival: {type: DataTypes.DATE},
+    departure: {type: DataTypes.DATE},
     status: {type: DataTypes.STRING},
-    biaya: {type: DataTypes.STRING}
+    biaya: {type: DataTypes.STRING},
+    lama: {type: DataTypes.INTEGER}
   }, {
     sequelize,
     modelName: 'car_park',

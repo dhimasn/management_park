@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       arrival: {
-        type: Sequelize.STRING
+        type: Sequelize.DATE
       },
       departure: {
         type: Sequelize.STRING
@@ -25,6 +25,9 @@ module.exports = {
       },
       biaya: {
         type: Sequelize.STRING
+      },
+      lama: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
