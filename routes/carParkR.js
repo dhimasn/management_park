@@ -37,17 +37,28 @@ const createcar_parkHandler = async (request, h) => {
         const status = "parked";
         const biaya = 5000;
         const { no_registrasi} = request.payload;
-        const car_park = await Models.car_park.create({
-            no_registrasi: no_registrasi,
-            arrival: arrival,
-            departure:departure,
-            status:status,
-            biaya:biaya
-        })
-        return {
-            data: car_park,
-            message: 'New car_park has been created.'
+        var car = await Models.car_park.findOne({ 
+            attributes: ['createdAt'], 
+            where: { no_registrasi: no_registrasi, status:"parked" }
+        });
+        if (car === null){
+            const car_park = await Models.car_park.create({
+                no_registrasi: no_registrasi,
+                arrival: arrival,
+                departure:departure,
+                status:status,
+                biaya:biaya
+            })
+            return {
+                data: car_park,
+                message: 'New car_park has been created.'
+            }
+        }else{
+            return {
+                message: 'the car was added.'
+            }
         }
+        
     } catch (error) {
         return h.response({
             error: error.message
@@ -57,17 +68,23 @@ const createcar_parkHandler = async (request, h) => {
 
 const updatecar_parkHandler = async (request, h) => {
     try {
-        const car_park_id = request.params.id;
-        const departure =  new Date();
-        const { status, biaya } = request.payload;
+        var car = await Models.car_park.findOne({ 
+            attributes: ['createdAt'], 
+            where: { id: request.params.id }
+        })
+        var date1 = car.createdAt;
+        var date2 = new Date();
+        var diff = Math.round(Math.abs(date2.getTime() - date1.getTime()) / 3600000);
+        var biaya = (((Math.round(diff)-1) * 3000) + 5000);
+        const status = "has left";
         const car_park = await Models.car_park.update({
-            departure:departure,
+            departure:date2,
             status: status,
             biaya: biaya
         }, {
                 where: {
-                    id: car_park_id,
-                    status:"check_in"
+                    id: request.params.id,
+                    status:"parked"
                 }
             })
         return {
