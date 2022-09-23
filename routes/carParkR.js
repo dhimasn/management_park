@@ -104,17 +104,31 @@ const findcar_parkHandler = async (request, h) => {
             attributes: ['id', 'no_registrasi', 'arrival', 'departure', 'status', 'lama','biaya', 'createdAt', 'updatedAt'], 
             where: { id: request.params.id }
         })
-        var date1 = car_park.createdAt;
-        var date2 = new Date();
-        var diff = Math.round(Math.abs(date2.getTime() - date1.getTime()) / 3600000);
-        var biaya = (((Math.round(diff)-1) * 3000) + 5000);
-        car_park.lama = diff;
-        car_park.biaya = biaya;
-        if (car_park !== null)      
+
+        if(car_park != null){
+            var date1 = car_park.createdAt;
+            var date2 = new Date();
+            var diff = Math.round(Math.abs(date2.getTime() - date1.getTime()) / 3600000);
+            console.log(diff);
+            if(diff <= 1){
+                car_park.lama = "1 jam";
+                car_park.biaya = 5000;
+            }else{
+                var biaya = (((Math.round(diff)-1) * 3000) + 5000);
+                car_park.biaya = biaya;
+                car_park.lama = diff;
+            } 
             return { 
                 message: "Data car_park berhasil diquery !",
                 data: car_park,
             }
+        }else{
+            return { 
+                message: "Data car park kosong !",
+                data: null,
+            }
+        }
+       
     }catch (error) {
         return h.response({
             error: error.message
